@@ -1,0 +1,375 @@
+@startuml NexusEnroll_Class_Diagram_Fixed
+
+!theme plain
+skinparam backgroundColor #F8F9FA
+skinparam classBackgroundColor lightblue
+skinparam classBorderColor black
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 80
+skinparam minClassWidth 200
+
+title <color:navy><size:18>NexusEnroll Microservices System - Complete Class Diagram</size></color>
+
+' Color Legend
+legend top right
+    |= Color |= Service Type |
+    | <color:#E8F5E8>Light Green</color> | Common Utilities |
+    | <color:#FFE0E0>Light Red</color> | Authentication |
+    | <color:#E0E8FF>Light Blue</color> | Student Service |
+    | <color:#FFF0E0>Light Orange</color> | Course Service |
+    | <color:#F0E8FF>Light Purple</color> | Faculty Service |
+    | <color:#E8FFE8>Light Mint</color> | Enrollment Service |
+    | <color:#FFE8F0>Light Pink</color> | Admin Service |
+    | <color:#E0F8FF>Light Cyan</color> | Notification Service |
+    | <color:#F8F0E0>Light Beige</color> | Reporting Service |
+endlegend
+
+package "Common Utilities" #E8F5E8 {
+    class Logger #C8E6C9 {
+        -log_file: str
+        -log_level: str
+        --
+        +log(message: str): void
+        +get_logs(): list
+        +set_log_level(level: str): void
+        +clear_logs(): void
+    }
+    
+    class DatabaseConnection #C8E6C9 {
+        -connection: Connection
+        -db_name: str
+        --
+        +get_connection(db_name: str): Connection
+        +execute_query(query: str): Result
+        +close_connection(): void
+        +begin_transaction(): void
+        +commit_transaction(): void
+        +rollback_transaction(): void
+    }
+}
+
+package "Authentication Service" #FFE0E0 {
+    class User #FFB3B3 {
+        -user_id: int
+        -username: str
+        -password_hash: str
+        -email: str
+        -role: str
+        -last_login: datetime
+        -is_active: bool
+        -created_at: datetime
+        --
+        +authenticate(password: str): bool
+        +change_password(new_password: str): bool
+        +update_last_login(): void
+        +deactivate(): void
+        +get_permissions(): list
+    }
+    
+    class AuthService #FFB3B3 {
+        -users: dict
+        -sessions: dict
+        -failed_attempts: dict
+        --
+        +authenticate_user(username: str, password: str): User
+        +authorize_action(user: User, action: str): bool
+        +create_user(user_data: dict): User
+        +deactivate_user(user_id: int): bool
+        +reset_password(user_id: int): str
+        +track_login_attempt(username: str): void
+    }
+}
+
+package "Student Service" #E0E8FF {
+    class Student #B3C6FF {
+        -student_id: int
+        -name: str
+        -email: str
+        -phone: str
+        -major: str
+        -year: int
+        -gpa: float
+        -enrolled_courses: list
+        -completed_courses: list
+        -advisor_id: int
+        --
+        +enroll_in_course(course_id: str): bool
+        +drop_course(course_id: str): bool
+        +view_schedule(): list
+        +get_academic_progress(): dict
+        +update_gpa(new_gpa: float): void
+        +calculate_total_credits(): int
+        +check_graduation_requirements(): bool
+    }
+    
+    class StudentService #B3C6FF {
+        -students: dict
+        -academic_records: dict
+        --
+        +register_student(student_data: dict): Student
+        +get_student(student_id: int): Student
+        +update_student(student_id: int, updates: dict): bool
+        +get_student_courses(student_id: int): list
+        +calculate_gpa(student_id: int): float
+        +transfer_credits(student_id: int, credits: list): bool
+        +generate_transcript(student_id: int): dict
+    }
+}
+
+package "Course Service" #FFF0E0 {
+    class Course #FFD9B3 {
+        -course_id: str
+        -name: str
+        -description: str
+        -credits: int
+        -instructor_id: int
+        -max_capacity: int
+        -current_enrollment: int
+        -schedule: dict
+        -prerequisites: list
+        -department: str
+        -semester: str
+        -year: int
+        --
+        +is_available(): bool
+        +add_student(student_id: int): bool
+        +remove_student(student_id: int): bool
+        +get_enrolled_students(): list
+        +check_prerequisites(student: Student): bool
+        +update_capacity(new_capacity: int): bool
+        +get_waitlist(): list
+    }
+    
+    class CourseService #FFD9B3 {
+        -courses: dict
+        -course_catalog: dict
+        -schedules: dict
+        --
+        +create_course(course_data: dict): Course
+        +get_course(course_id: str): Course
+        +search_courses(criteria: dict): list
+        +update_course(course_id: str, updates: dict): bool
+        +delete_course(course_id: str): bool
+        +get_available_courses(): list
+        +check_schedule_conflicts(course_id: str): bool
+    }
+}
+
+package "Faculty Service" #F0E8FF {
+    class Faculty #D9C6FF {
+        -faculty_id: int
+        -name: str
+        -email: str
+        -department: str
+        -office_location: str
+        -courses_taught: list
+        -office_hours: dict
+        -research_areas: list
+        --
+        +view_roster(course_id: str): list
+        +submit_grades(course_id: str, grades: dict): bool
+        +request_course_change(course_id: str, changes: dict): bool
+        +update_office_hours(new_hours: dict): void
+        +approve_late_enrollment(student_id: int, course_id: str): bool
+        +generate_grade_distribution(course_id: str): dict
+    }
+    
+    class FacultyService #D9C6FF {
+        -faculty_members: dict
+        -teaching_assignments: dict
+        -workload_tracker: dict
+        --
+        +register_faculty(faculty_data: dict): Faculty
+        +get_faculty(faculty_id: int): Faculty
+        +assign_course(faculty_id: int, course_id: str): bool
+        +get_faculty_workload(faculty_id: int): dict
+        +update_faculty(faculty_id: int, updates: dict): bool
+        +calculate_teaching_load(faculty_id: int): float
+    }
+}
+
+package "Enrollment Service" #E8FFE8 {
+    class Enrollment #B3FFB3 {
+        -enrollment_id: int
+        -student_id: int
+        -course_id: str
+        -enrollment_date: datetime
+        -status: str
+        -grade: str
+        -semester: str
+        -year: int
+        -credits_earned: int
+        --
+        +validate_prerequisites(student: Student, course: Course): bool
+        +check_capacity(course: Course): bool
+        +check_time_conflicts(student: Student, course: Course): bool
+        +update_status(new_status: str): void
+        +assign_grade(grade: str): void
+        +calculate_grade_points(): float
+    }
+    
+    class EnrollmentService #B3FFB3 {
+        -enrollments: dict
+        -waitlist: dict
+        -enrollment_rules: dict
+        --
+        +process_enrollment(student_id: int, course_id: str): bool
+        +process_drop(student_id: int, course_id: str): bool
+        +validate_enrollment(student: Student, course: Course): bool
+        +add_to_waitlist(student_id: int, course_id: str): bool
+        +process_waitlist(course_id: str): void
+        +get_enrollment_history(student_id: int): list
+        +enforce_enrollment_deadlines(): void
+    }
+}
+
+package "Administrator Service" #FFE8F0 {
+    class Administrator #FFB3D9 {
+        -admin_id: int
+        -name: str
+        -email: str
+        -permissions: list
+        -department: str
+        -access_level: str
+        --
+        +create_course(course_data: dict): bool
+        +manage_student_account(student_id: int, action: str): bool
+        +generate_reports(report_type: str): dict
+        +override_enrollment(student_id: int, course_id: str): bool
+        +manage_faculty(faculty_id: int, action: str): bool
+        +set_semester_dates(semester_data: dict): bool
+        +manage_system_settings(settings: dict): bool
+    }
+    
+    class AdminService #FFB3D9 {
+        -administrators: dict
+        -system_settings: dict
+        -audit_logs: list
+        --
+        +register_admin(admin_data: dict): Administrator
+        +get_admin(admin_id: int): Administrator
+        +authorize_action(admin_id: int, action: str): bool
+        +get_system_stats(): dict
+        +manage_semester(semester_data: dict): bool
+        +backup_system_data(): bool
+        +restore_system_data(backup_file: str): bool
+    }
+}
+
+package "Notification Service" #E0F8FF {
+    class Notification #B3E6FF {
+        -notification_id: int
+        -recipient_id: int
+        -message: str
+        -type: str
+        -sent_date: datetime
+        -status: str
+        -priority: str
+        -retry_count: int
+        --
+        +send_notification(): bool
+        +mark_as_read(): void
+        +retry_send(): bool
+        +schedule_delivery(send_time: datetime): void
+    }
+    
+    class NotificationService #B3E6FF {
+        -notification_queue: list
+        -sent_notifications: dict
+        -templates: dict
+        --
+        +send_notification(notification: Notification): bool
+        +queue_notification(notification: Notification): bool
+        +notify_waitlist_opening(course_id: str): bool
+        +notify_grade_posted(student_id: int, course_id: str): bool
+        +notify_enrollment_success(student_id: int, course_id: str): bool
+        +process_notification_queue(): void
+        +send_bulk_notifications(notifications: list): bool
+    }
+}
+
+package "Reporting Service" #F8F0E0 {
+    class Report #F0E6B3 {
+        -report_id: int
+        -report_type: str
+        -generated_by: int
+        -generated_date: datetime
+        -data: dict
+        -format: str
+        -parameters: dict
+        --
+        +generate_enrollment_stats(): dict
+        +generate_faculty_workload(): dict
+        +generate_course_popularity(): dict
+        +export_to_file(filename: str): bool
+        +schedule_generation(schedule: dict): bool
+    }
+    
+    class ReportingService #F0E6B3 {
+        -reports: dict
+        -scheduled_reports: list
+        -report_templates: dict
+        --
+        +generate_report(report_type: str, parameters: dict): Report
+        +schedule_report(report_config: dict): bool
+        +get_report(report_id: int): Report
+        +delete_report(report_id: int): bool
+        +get_available_reports(): list
+        +export_multiple_reports(report_ids: list): bool
+    }
+}
+
+' Relationship definitions with proper PlantUML syntax
+' Core entity relationships
+Student ||--o{ Enrollment
+Course ||--o{ Enrollment
+Faculty ||--o{ Course
+
+' User inheritance
+User ||--|| Student
+User ||--|| Faculty
+User ||--|| Administrator
+
+' Service management
+StudentService --> Student
+CourseService --> Course
+FacultyService --> Faculty
+EnrollmentService --> Enrollment
+AdminService --> Administrator
+NotificationService --> Notification
+ReportingService --> Report
+AuthService --> User
+
+' Inter-service dependencies
+EnrollmentService ..> StudentService
+EnrollmentService ..> CourseService
+EnrollmentService ..> NotificationService
+CourseService ..> FacultyService
+AdminService ..> StudentService
+AdminService ..> CourseService
+AdminService ..> FacultyService
+ReportingService ..> StudentService
+ReportingService ..> CourseService
+ReportingService ..> EnrollmentService
+
+' Common utilities usage
+StudentService ..> Logger
+CourseService ..> Logger
+FacultyService ..> Logger
+EnrollmentService ..> Logger
+AdminService ..> Logger
+NotificationService ..> Logger
+ReportingService ..> Logger
+AuthService ..> Logger
+
+StudentService ..> DatabaseConnection
+CourseService ..> DatabaseConnection
+FacultyService ..> DatabaseConnection
+EnrollmentService ..> DatabaseConnection
+AdminService ..> DatabaseConnection
+NotificationService ..> DatabaseConnection
+ReportingService ..> DatabaseConnection
+AuthService ..> DatabaseConnection
+
+@enduml
