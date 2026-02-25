@@ -4,13 +4,13 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![Architecture](https://img.shields.io/badge/Architecture-Microservices-orange.svg)](https://microservices.io/)
 [![Design Patterns](https://img.shields.io/badge/Design%20Patterns-6%20Implemented-green.svg)](README.md)
-[![License](https://img.shields.io/badge/License-Academic-yellow.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 NexusEnroll is a microservices-based course enrollment platform built to demonstrate modern software architecture principles. It replaces a legacy monolithic system with scalable, maintainable microservices, showcasing design patterns and best practices in distributed systems development.
 
 ## 🎯 Overview
 
-NexusEnroll is a sophisticated microservices-based university course enrollment platform designed for the **SCS 2303 Software Architecture Assignment (2025)**. It replaces legacy monolithic systems with modern, scalable, and maintainable microservices architecture, demonstrating professional-grade software engineering practices.
+NexusEnroll is a sophisticated microservices-based course enrollment platform designed as a **modern, scalable learning project**. It replaces legacy monolithic systems with modern, scalable, and maintainable microservices architecture, demonstrating professional-grade software engineering practices.
 
 ### 🏆 Key Achievements
 
@@ -255,8 +255,6 @@ python services\auth_service\api_examples.py
 
 ## 📞 Project Information
 
-- **Course**: SCS 2303 Software Architecture (2025)
-- **Assignment**: Assignment 03 - Microservices Architecture
 - **Implementation**: Production-ready authentication with design patterns
 - **Documentation**: Comprehensive guides and API documentation
 - **Testing**: Multiple testing approaches with web interface
@@ -273,9 +271,9 @@ python services\auth_service\api_examples.py
 
 <div align="center">
 
-**🎓 Built for Educational Excellence**
+**🚀 Built for Professional Excellence**
 
-*NexusEnroll - Modern Microservices Architecture for University Systems*
+*NexusEnroll - Modern Microservices Architecture*
 
 [![Authentication](https://img.shields.io/badge/Auth%20Service-Production%20Ready-brightgreen)](services/auth_service/)
 [![Design Patterns](https://img.shields.io/badge/Design%20Patterns-6%20Implemented-blue)](README.md)
