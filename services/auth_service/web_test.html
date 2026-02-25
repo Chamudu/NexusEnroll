@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusEnroll Auth Service Tester</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 10px 0; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { background: #e8f5e9; padding: 15px; border-radius: 4px; margin: 10px 0; white-space: pre-wrap; }
+        .error { background: #ffebee; color: #c62828; }
+        input, select { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; }
+        .flex { display: flex; gap: 10px; align-items: center; }
+    </style>
+</head>
+<body>
+    <h1>🔐 NexusEnroll Authentication Service Tester</h1>
+    
+    <!-- Service Status -->
+    <div class="container">
+        <h3>📊 Service Status</h3>
+        <button onclick="checkStatus()">Check Service Status</button>
+        <div id="statusResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Login -->
+    <div class="container">
+        <h3>🔑 User Login</h3>
+        <div class="flex">
+            <input type="text" id="loginUsername" placeholder="Username" value="admin">
+            <input type="password" id="loginPassword" placeholder="Password" value="admin123">
+            <button onclick="login()">Login</button>
+        </div>
+        <div id="loginResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Session Validation -->
+    <div class="container">
+        <h3>✅ Session Validation</h3>
+        <button onclick="validateSession()">Validate Current Session</button>
+        <div id="validateResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Create User -->
+    <div class="container">
+        <h3>👤 Create New User</h3>
+        <input type="text" id="newUsername" placeholder="Username" value="test_user">
+        <input type="password" id="newPassword" placeholder="Password" value="password123">
+        <input type="email" id="newEmail" placeholder="Email" value="test@nexusenroll.edu">
+        <select id="newRole">
+            <option value="student">Student</option>
+            <option value="faculty">Faculty</option>
+            <option value="administrator">Administrator</option>
+        </select>
+        <button onclick="createUser()">Create User</button>
+        <div id="createResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- List Users -->
+    <div class="container">
+        <h3>📋 List All Users</h3>
+        <button onclick="listUsers()">List Users (Admin Required)</button>
+        <div id="listResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Authorization Check -->
+    <div class="container">
+        <h3>🛡️ Authorization Check</h3>
+        <select id="actionSelect">
+            <option value="manage_users">Manage Users</option>
+            <option value="manage_courses">Manage Courses</option>
+            <option value="enroll_courses">Enroll in Courses</option>
+            <option value="view_grades">View Grades</option>
+        </select>
+        <button onclick="checkAuthorization()">Check Authorization</button>
+        <div id="authResult" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:5001/auth';
+        let sessionToken = null;
+
+        function showResult(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = isError ? 'result error' : 'result';
+            element.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function makeRequest(endpoint, options = {}) {
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+                if (sessionToken && options.requiresAuth !== false) {
+                    headers['Authorization'] = `Bearer ${sessionToken}`;
+                }
+
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    ...options,
+                    headers: { ...headers, ...options.headers }
+                });
+
+                const data = await response.json();
+                return { success: response.ok, data, status: response.status };
+            } catch (error) {
+                return { success: false, data: { error: error.message }, status: 0 };
+            }
+        }
+
+        async function checkStatus() {
+            const result = await makeRequest('/status', { requiresAuth: false });
+            showResult('statusResult', result.data, !result.success);
+        }
+
+        async function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const result = await makeRequest('/login', {
+                method: 'POST',
+                body: JSON.stringify({ username, password }),
+                requiresAuth: false
+            });
+
+            if (result.success && result.data.session_token) {
+                sessionToken = result.data.session_token;
+                result.data._note = "✅ Session token saved for subsequent requests";
+            }
+
+            showResult('loginResult', result.data, !result.success);
+        }
+
+        async function validateSession() {
+            if (!sessionToken) {
+                showResult('validateResult', { error: "Please login first to get a session token" }, true);
+                return;
+            }
+
+            const result = await makeRequest('/validate');
+            showResult('validateResult', result.data, !result.success);
+        }
+
+        async function createUser() {
+            if (!sessionToken) {
+                showResult('createResult', { error: "Please login first" }, true);
+                return;
+            }
+
+            const userData = {
+                username: document.getElementById('newUsername').value,
+                password: document.getElementById('newPassword').value,
+                email: document.getElementById('newEmail').value,
+                role: document.getElementById('newRole').value
+            };
+
+            const result = await makeRequest('/users', {
+                method: 'POST',
+                body: JSON.stringify(userData)
+            });
+
+            showResult('createResult', result.data, !result.success);
+        }
+
+        async function listUsers() {
+            if (!sessionToken) {
+                showResult('listResult', { error: "Please login first" }, true);
+                return;
+            }
+
+            const result = await makeRequest('/users');
+            showResult('listResult', result.data, !result.success);
+        }
+
+        async function checkAuthorization() {
+            if (!sessionToken) {
+                showResult('authResult', { error: "Please login first" }, true);
+                return;
+            }
+
+            const action = document.getElementById('actionSelect').value;
+            const result = await makeRequest('/authorize', {
+                method: 'POST',
+                body: JSON.stringify({ action })
+            });
+
+            showResult('authResult', result.data, !result.success);
+        }
+
+        // Auto-check status when page loads
+        window.onload = () => {
+            checkStatus();
+        };
+    </script>
+</body>
+</html>
