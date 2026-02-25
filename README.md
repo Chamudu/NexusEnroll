@@ -1,9 +1,9 @@
 # NexusEnroll
-# NexusEnroll - Microservices University Course Enrollment System
+# NexusEnroll - Microservices Course Enrollment System
 
 ## Overview
 
-NexusEnroll is a microservices-based university course enrollment platform designed for the SCS 2303 Software Architecture assignment (2025). It replaces the legacy monolithic system with modern, scalable, and maintainable microservices. The project demonstrates software architecture principles, design patterns, and collaborative development.
+NexusEnroll is a microservices-based course enrollment platform built to demonstrate modern software architecture principles. It replaces a legacy monolithic system with scalable, maintainable microservices, showcasing design patterns and best practices in distributed systems development.
 
 ## Architecture
 
@@ -74,19 +74,11 @@ Example:
 curl -X POST -H "Content-Type: application/json" -d '{"student_id":1, "course_id":"CS101"}' http://localhost:5000/enroll
 ```
 
-## Team Collaboration
+## Contributing
 
-- Use branches for feature development.
-- Commit clear messages and document code.
-- Track tasks via GitHub Issues.
-
-## Assignment Requirements
-
-- Robust, maintainable, scalable design
-- Application of SOLID, DRY, KISS principles
-- UML and architecture diagrams in `docs/`
-- Use of at least 3 distinct design patterns
-- Screencast video (max 10 min) demonstrating core features
+- Use feature branches for development
+- Write clear commit messages and document code
+- Track tasks and issues using GitHub Issues
 
 ## License
 
