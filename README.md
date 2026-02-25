@@ -1,11 +1,12 @@
-# 🎓 NexusEnroll - Microservices University Course Enrollment System
+# NexusEnroll
+# NexusEnroll - Microservices Course Enrollment System
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![Architecture](https://img.shields.io/badge/Architecture-Microservices-orange.svg)](https://microservices.io/)
 [![Design Patterns](https://img.shields.io/badge/Design%20Patterns-6%20Implemented-green.svg)](README.md)
 [![License](https://img.shields.io/badge/License-Academic-yellow.svg)](LICENSE)
 
-> **A comprehensive microservices-based university course enrollment platform demonstrating modern software architecture principles and design patterns.**
+NexusEnroll is a microservices-based course enrollment platform built to demonstrate modern software architecture principles. It replaces a legacy monolithic system with scalable, maintainable microservices, showcasing design patterns and best practices in distributed systems development.
 
 ## 🎯 Overview
 
@@ -216,71 +217,11 @@ python main.py
 # Test at: http://127.0.0.1:5000/
 ```
 
-### API Documentation
+## Contributing
 
-- **📖 Main Project README** - High-level architecture and setup (this file)
-- **📖 Auth Service README** - Detailed API documentation in `services/auth_service/README.md`
-- **📖 API Examples** - Interactive examples in `services/auth_service/api_examples.py`
-
-### Testing Options
-
-1. **🌐 Web Interface** - Visual testing at `http://127.0.0.1:5001/`
-2. **🤖 Automated Tests** - Run `python test_auth.py`
-3. **💻 PowerShell Commands** - Manual API testing
-4. **📋 API Examples** - Pre-built usage examples
-
-## 🎓 Academic Requirements Fulfilled
-
-### ✅ Software Architecture Principles
-- **✅ SOLID Principles** - Applied throughout the codebase
-- **✅ DRY (Don't Repeat Yourself)** - Common utilities shared
-- **✅ KISS (Keep It Simple, Stupid)** - Clean, readable code
-
-### ✅ Design Patterns (6 Implemented)
-- **✅ Singleton** - Database connections, logging
-- **✅ Factory** - User and service object creation  
-- **✅ Observer** - Event-driven notifications
-- **✅ Strategy** - Authentication strategies
-- **✅ Repository** - Data access abstraction
-- **✅ Facade** - Simplified service interfaces
-
-### ✅ Documentation & Diagrams
-- **✅ UML Class Diagram** - Complete with design patterns
-- **✅ Architecture Documentation** - Comprehensive READMEs
-- **✅ API Documentation** - Complete endpoint documentation
-- **✅ Testing Documentation** - Multiple testing approaches
-
-### ✅ Robust Implementation
-- **✅ Error Handling** - Comprehensive error management
-- **✅ Security Features** - Authentication, authorization, audit logging
-- **✅ Scalable Design** - Microservices architecture
-- **✅ Maintainable Code** - Clear structure and documentation
-
-## 🚀 Next Steps & Roadmap
-
-### Phase 1: Core Integration (Current)
-- **✅ Authentication Service** - Production ready
-- **🔄 Student Service Integration** - Connect with auth service
-- **📋 Cross-Service Testing** - Verify service communication
-
-### Phase 2: Service Expansion
-- **📚 Course Service** - Implement course catalog management
-- **🎓 Faculty Service** - Add grade and course management
-- **📋 Enrollment Service** - Student course enrollment system
-
-### Phase 3: Enhanced Features  
-- **📧 Notification Service** - Email and alert system
-- **📊 Reporting Service** - Analytics and dashboard
-- **🔒 Enhanced Security** - JWT tokens, bcrypt hashing
-
-### Phase 4: Production Deployment
-- **🐳 Docker Containerization** - Service containerization
-- **⚖️ Load Balancing** - High availability setup
-- **📊 Monitoring** - Production monitoring and logging
-
-## 🎬 Demonstration
-
-### For Academic Presentation
+- Use feature branches for development
+- Write clear commit messages and document code
+- Track tasks and issues using GitHub Issues
 
 1. **🌐 Start with Web Interface**
    - Show the interactive testing at `http://127.0.0.1:5001/`
